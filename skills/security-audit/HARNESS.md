@@ -70,8 +70,21 @@ Preserve write-isolation: only the parent writes shared `findings.json`, ledger,
 
 Before treating this skill as trusted in the harness, run MiscRepos **security-audit-rules** on this directory (override phrases, hidden Unicode, fetch-and-execute). Attack-class hunting prompts are expected content; injection against the operator is not.
 
+## Graph-assisted reconnaissance (companion)
+
+When available **locally** (no cloud Memory), prefer import/call/blast edges before filename hunting in Phase 1 recon:
+
+1. jCodeMunch: `find_references` / `get_blast_radius` / `get_dependency_graph` on trust-boundary symbols (auth, vault, MCP wrappers, sanitize).
+2. Nogic: coupling / fan-in views when the operator already uses it ([NOGIC_WORKFLOW.md](https://github.com/ManintheCrowds/MiscRepos/blob/main/.cursor/docs/NOGIC_WORKFLOW.md)).
+3. polyglot-indexer SCIP: **only** if a local binary exists **and** MiscRepos decision-log + SCP review cleared MCP registration — never invent an MCP entry from this companion.
+
+If none of the above are available, stay source-read / outline based and record the gap in `needs_validation` or architecture notes. Do not probe live systems to “complete” the graph.
+
+Shot evidence (keep/skip): MiscRepos `docs/adhoc/2026-10-20-polyglot-vs-jcodemunch-shot.md`.
+
 ## Evolve later (do not implement in the adapter)
 
 - Diff `AI-AND-LLM.md` against MiscRepos `scp_threat_registry.json`; add only missing patterns with a registry version bump.
 - Compare `SUPPLY-CHAIN-AND-RELEASE.md` with `checksum_integrity.py` workflows.
 - Do **not** merge `findings.json` into critic JSON or intent-alignment JSON.
+- Re-run polyglot shot once CGO/gcc (or Linux CI) can build the binary; then reconsider keep/skip.
