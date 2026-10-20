@@ -1,9 +1,40 @@
 ---
 name: security-audit
-description: Security guidance and vulnerability review for codebases, APIs, services, CLI tools, libraries, and daemons. Use for security questions, focused reviews, vulnerability research, security audits, or pen tests. Run the complete workflow only for explicit codebase audit or pen-test requests, full/comprehensive/end-to-end reviews, or requested report artifacts.
+description: Security guidance and vulnerability review for codebases, APIs, services, CLI tools, libraries, and daemons. Use for security questions, focused reviews, vulnerability research, codebase security audits, or pen tests of a named repository. Run the complete workflow only for explicit codebase audit or pen-test requests, full/comprehensive/end-to-end reviews, or requested report artifacts. Do not use for auditing Cursor rules/skills (use security-audit-rules).
+triggers_any:
+  - codebase security audit
+  - security audit this
+  - find vulnerabilities
+  - pen-test this
+  - pen test this
+  - vulnerability review
+  - full security review
+  - end-to-end security review
+do_not_trigger_if:
+  - audit rules
+  - audit skills
+  - import rules
+  - import skills
+  - prompt injection in rules
+  - security-audit-rules only
+required_inputs:
+  - named repository path or repo id for full audit
+  - named output directory for full audit artifacts
+forbidden_actions:
+  - live probe of unnamed or third-party systems
+  - target-controlled execution without OS sandbox
+  - silent write to ~/security-audit-skill
+  - modify target source
+  - audit unnamed workspace roots
+exit_criteria: "Guidance answer returned; or full audit terminal state with REPORT.md + findings.json validators pass, or run_status incomplete with disclosed reason."
+output_schema: "findings.json per report-schema.json; coverage-ledger.json; REPORT.md; FINDINGS-DETAIL.md; NEEDS-VALIDATION.md"
 ---
 
+<!-- HARNESS: MiscRepos fork adapter — read HARNESS.md first; on conflict HARNESS.md wins. Upstream pin c1c8a8c. -->
+
 # Security Audit
+
+**Harness first:** Open and follow [HARNESS.md](HARNESS.md) before the rest of this skill. On conflict with MiscRepos harness constraints, **HARNESS.md wins**. Upstream phases, companions, schema, and validators remain the methodology SSOT.
 
 Find vulnerabilities that violate a real trust boundary, then give owners the source evidence, safe reproduction, priority, and smallest effective fix. This is a defensive, source-first workflow. A candidate without a concrete affected principal, resource, or security outcome is not a confirmed finding.
 
